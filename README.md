@@ -4,11 +4,11 @@ A dedicated Ubuntu appliance that simplifies VMware Cloud Foundation offline dep
 
 ## Download
 
-**Appliance 1.0.0 · build 2026-09-05.2 · prerelease for manual deployment testing**
+**Appliance 1.0.0 · build 2026-09-05.2 · release**
 
 Download the **OVA and revision 1.8 guides** from the [release page](https://github.com/raleyj/vcf-depot/releases/tag/v1.0.0-build.2026-09-05.2). The OVA is approximately 1.16 GiB. GitHub's automatically generated source archives do not contain the appliance.
 
-This exact rebuilt OVA still needs fresh-deployment and VCF Installer acceptance testing. Build VM checks and package verification passed; earlier release qualification does not qualify this exact image. Read the [build notes](Build-2026-09-05.2.md) and [download verification instructions](VERIFY-DOWNLOADS.md).
+The maintainer completed manual OVA testing before the final minor changes and approved this build for release. Build VM checks and package verification passed. This approval supersedes the earlier pending-test status in the revision 1.8 guides and packaged build supplement. Read the [build notes](Build-2026-09-05.2.md) and [download verification instructions](VERIFY-DOWNLOADS.md).
 
 ## Guides
 
