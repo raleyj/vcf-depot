@@ -4,11 +4,11 @@ A dedicated Ubuntu appliance that simplifies VMware Cloud Foundation offline dep
 
 ## Download
 
-**Appliance 1.0.0 · build 2026-09-05.2 · release**
+**Appliance 1.1.0 · build 2026-09-07.1 · release**
 
-Download the **OVA and revision 1.8 guides** from the [release page](https://github.com/raleyj/vcf-depot/releases/tag/v1.0.0-build.2026-09-05.2). The OVA is approximately 1.16 GiB. GitHub's automatically generated source archives do not contain the appliance.
+Download the **OVA and revision 1.9 guides** from the [1.1.0 release page](https://github.com/raleyj/vcf-depot/releases/tag/v1.1.0). GitHub's automatically generated source archives do not contain the appliance.
 
-The maintainer completed manual OVA testing before the final minor changes and approved this build for release. Build VM checks and package verification passed. This approval supersedes the earlier pending-test status in the revision 1.8 guides and packaged build supplement. Read the [build notes](Build-2026-09-05.2.md) and [download verification instructions](VERIFY-DOWNLOADS.md).
+Read the [1.1.0 release notes](Release-Notes-1.1.0.md), [build notes](Build-2026-09-07.1.md), and [download verification instructions](VERIFY-DOWNLOADS.md). The signed release record identifies the exact OVA and its validation scope.
 
 ## Guides
 
@@ -18,9 +18,9 @@ The maintainer completed manual OVA testing before the final minor changes and a
 | Quick Start | [Markdown](Quick-Start-Guide.md) | [Word](VCF-Offline-Depot-Quick-Start-Guide.docx) |
 | Administration | [Markdown](Administrator-Guide.md) | [Word](VCF-Offline-Depot-Administrator-Guide.docx) |
 | Troubleshooting | [Markdown](Troubleshooting-Guide.md) | [Word](VCF-Offline-Depot-Troubleshooting-Guide.docx) |
-| Roadmap | Historical baseline, revision 3.6 | [Word](VCF-Offline-Depot-Roadmap.docx) |
+| Roadmap | Revision 3.7 | [Word](VCF-Offline-Depot-Roadmap.docx) |
 
-The four operational guides are revision **1.8** and supersede earlier companion guides, including those embedded in the OVA. The roadmap remains revision 3.6; its historical completion status does not qualify this rebuilt OVA.
+The four operational guides are revision **1.9**, matching the guides embedded in the 1.1.0 OVA. The roadmap is revision **3.7**.
 
 ## Requirements
 
@@ -45,16 +45,19 @@ DHCP is the default. Static configuration requires the complete network settings
 
 Follow the Quick Start Guide for the detailed sequence. Never put deployment credentials in GitHub issues.
 
-## Included in this build
+## New in 1.1.0
 
-- Compact management forms and consistent status badges, including the inventory update date and time.
-- Configurable system timezone, independent of the NTP server list, with persistence across reboots.
-- Automatic depot content-container startup with the management service.
-- Current administrator navigation and VCF 9.1.1 release selection.
+- Install downloads make a separate VCF Download Tool request for the catalog-selected bootable ESX ISO. Size and SHA-256 verification must pass before the job reports success.
+- A permanent **Depot Management** page provides **Download Tool**, **Depot Accounts**, and **HTTPS Certificate** maintenance after initial setup.
+- Header labels match **VCF Connections** and **Appliance Status**. **Depot Files** opens **Depot File Management**.
+- Administrator-menu pages no longer highlight unrelated header pages. All three maintenance pages have a consistent **Back to Depot Management** button.
+- Updated operational guides cover the new navigation and download behavior.
+
+Existing features include configurable timezone independent of NTP sources, compact management forms, inventory status badges with date and time, and automatic depot content-container startup.
 
 ## Scope and known limitations
 
-VCF Installer is the supported integration scope. SDDC Manager and Fleet Manager qualification remains deferred. After a saved connection reports Connected, setup-only pages are hidden; this build has no separate post-setup maintenance entry for those pages. Complete tool, account, and certificate setup before completing the endpoint connection.
+VCF Installer is the supported integration scope. SDDC Manager and Fleet Manager qualification remains deferred. After a saved connection reports Connected, use Depot Management to maintain the download tool, depot accounts, and HTTPS certificate.
 
 The OVA deploys a fresh appliance. It does not migrate accounts, configuration, certificates, downloaded binaries, or history from an existing appliance. Preserve the existing appliance and data during replacement testing, and avoid duplicate IP addresses.
 

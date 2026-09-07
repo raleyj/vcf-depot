@@ -1,24 +1,29 @@
 # VCF Offline Depot
 ## Troubleshooting and Appliance Update Guide
 
-**Release baseline:** Appliance 1.0.0 - distribution build 2026-09-05.2
+**Release baseline:** Appliance 1.1.0 - distribution build 2026-09-07.1
 
-**Documentation revision:** 1.8 — 5 September 2026
+**Documentation revision:** 1.9 — 7 September 2026
 
-**Release status:** The previously agreed VCF Installer-only 1.0 GA acceptance work and R01 remain complete. This rebuilt OVA is ready for manual replacement deployment testing; fresh deployment and VCF Installer acceptance of this exact image are pending. SDDC Manager and Fleet Manager qualification (T04) remains deferred.
+**Release status:** Version 1.1.0 maintenance release. Consult the signed release record for validation of this exact OVA. VCF Installer remains the supported integration scope; SDDC Manager and Fleet Manager qualification remains deferred.
 
 **Audience:** Appliance administrators diagnosing failures, restoring service, or installing a future signed release
 
 **Use:** Follow the symptom procedures in order, preserve evidence before changing state, and use the update workflow for every future appliance release
 
+## Bootable ESX installer media
+
+Choose **Install, including ESXi media** when downloading installation binaries. After the main VCF download, the appliance reads the release bill of materials and product catalog, then makes a separate VCF Download Tool request for the matching x86-64 bootable ESX ISO bundle ID. This includes installer media cataloged as PATCH instead of INSTALL. No separate manual ISO upload is required for an available entitled catalog entry.
+
+The job requires the expected ISO filename, size, and SHA-256 checksum before reporting success. For VCF 9.1.1, the catalog entry is `VMware-VMvisor-Installer-9.1.1.0.25714478.x86_64.iso`. A missing, ambiguous, or corrupt ISO fails the job instead of accepting a zero-result request. Correct the cause and retry the same release; the tool reuses existing content. Look under the ESX_HOST component in **Depot Files**. A fresh activation code is required for each new job and is removed after use.
+
 ## Navigation in this build
 
-During initial setup, open **Prepare Depot** and use its sidebar for Download Tool, Authorize & Download Binaries, Depot Accounts, HTTPS Certificate, and VCF Connections. Complete tool installation, depot accounts, and certificate activation before finishing the endpoint connection.
+The header provides **Authorize & Download**, **VCF Connections**, **Depot Files**, **Depot Management**, **Connection Logs**, and **Appliance Status**. During initial setup, **Prepare Depot** provides the guided steps for the Download Tool, authorization, Depot Accounts, HTTPS Certificate, and VCF Connections. After a saved endpoint becomes Connected, the setup workflow is hidden.
 
-Once a saved connection reports **Connected**, Prepare Depot and its setup sidebar are hidden. The main navigation then shows **Authorize & Download**, **Endpoint Connections**, **Offline Depot**, **Connection Logs**, and **Health Status**. A completed setup opens Health Status. Direct links to setup-only pages can return to Health Status; this build does not expose a separate post-setup maintenance entry for those pages. Do not remove a working connection record merely to reveal setup controls.
+**Depot Management** remains available before and after setup. Its three cards open Download Tool, Depot Accounts, and HTTPS Certificate. Use **Back to Depot Management** to return. Maintenance does not require disconnecting or deleting a working endpoint. After rotating depot credentials or renewing the certificate, review affected clients in **VCF Connections** and verify authenticated retrieval.
 
-Use the administrator account menu for **Appliance management**, **Appliance updates**, and **Admin user management**. Health Status displays effective settings and service health; Appliance management changes settings. In the compact management layout, Identity and Timezone sit side by side above Management network and DNS and time; cards stack on smaller screens. Management network, Upload and verify a release, and Create administrator use normal card borders without the former blue top accent.
-
+**Depot Files** opens the **Depot File Management** page for browsing, uploading, and managing release files. **Appliance Status** reports health and effective settings. The administrator menu contains **Appliance management**, **Appliance updates**, and **Admin user management**; these pages leave the primary header links unhighlighted.
 ## Safety rules
 
 1. Use the management GUI first when it is available.
@@ -112,7 +117,7 @@ Never bypass certificate validation as a permanent workaround.
 3. Review the effective DNS servers in **Appliance management**. If the GUI is unavailable, ask the network administrator to verify resolver reachability.
 4. Resolve the appliance FQDN, VCF Installer FQDN, NTP names, and required vendor endpoints.
 5. Confirm the default route and firewall permit the required traffic.
-6. Open **Health Status**, select **Refresh status**, and review NTP synchronization and the current time source.
+6. Open **Appliance Status**, select **Refresh status**, and review NTP synchronization and the current time source.
 7. Correct DNS before diagnosing an NTP hostname failure.
 8. Correct time before diagnosing certificates, signed updates, or token expiration.
 9. Retest the original workflow after time synchronization becomes active.
@@ -124,7 +129,7 @@ Never bypass certificate validation as a permanent workaround.
 1. Open the administrator account menu and select **Appliance management**.
 2. In **Timezone**, choose an installed region and city, such as **America/New_York**, or **Etc/UTC**.
 3. Select **Save timezone** and confirm the current-timezone message matches your selection.
-4. Open **Health Status**, select **Refresh status**, and verify the timezone under **Time synchronization**.
+4. Open **Appliance Status**, select **Refresh status**, and verify the timezone under **Time synchronization**.
 5. Record the setting. After the next planned reboot, verify it is retained.
 
 The sealed OVA defaults to **Etc/UTC**. Saving the timezone is independent of **Apply configuration**: it does not apply pending identity or network edits, change the NTP server list, or restart NTP. NTP synchronizes the clock independently of the timezone. Configure up to two NTP sources in **DNS and time**, then use **Apply configuration** for those changes.
@@ -133,7 +138,7 @@ The inventory UPDATED badge uses the browser workstation's local date and time. 
 
 ## Timezone or timestamp appears incorrect
 
-1. Compare the selected timezone in Appliance management with Time synchronization in Health Status.
+1. Compare the selected timezone in Appliance management with Time synchronization in Appliance Status.
 2. If the list is unavailable, select **Reload current settings** and wait for the installed timezone choices to load. Record any error if the selector stays disabled.
 3. Choose a listed timezone and use **Save timezone**, then verify its success message. Apply configuration does not save this separate selection.
 4. If the inventory badge differs from the appliance's local time, check the workstation timezone. Its date and time are browser-local; UTC audit records remain UTC.
@@ -141,13 +146,13 @@ The inventory UPDATED badge uses the browser workstation's local date and time. 
 
 ## Depot service unavailable after first boot
 
-The content container should start automatically with the management service in build 2026-09-05.2. A manual container start is not an expected deployment step.
+The content container should start automatically with the management service in version 1.1.0. A manual container start is not an expected deployment step.
 
 1. Confirm first boot completed and record the OVA build and checksum.
-2. Review services and storage in **Health Status**, or use **Show service status** from the VM console if the GUI is unavailable.
+2. Review services and storage in **Appliance Status**, or use **Show service status** from the VM console if the GUI is unavailable.
 3. Record the exact HTTP response. Anonymous HTTP 401 is expected authentication enforcement, not proof of a service failure.
 4. Test a known downloaded metadata object with a depot account and trusted HTTPS identity.
-5. If the service is unavailable, preserve service status, first-boot errors, and a support bundle from Health Status before an approved restart. Report the failure against this exact OVA.
+5. If the service is unavailable, preserve service status, first-boot errors, and a support bundle from Appliance Status before an approved restart. Report the failure against this exact OVA.
 
 ## Inventory badge interpretation
 
@@ -182,7 +187,7 @@ A new appliance can report zero files and no incomplete files because its data d
 ## Download fails or stops
 
 1. Record the job identifier, selected release, current file, transferred size, and exact error.
-2. Confirm vendor entitlement and the activation code or access token are still valid.
+2. Confirm vendor entitlement and the activation code is still valid.
 3. Confirm the appliance can reach the required vendor endpoints.
 4. Confirm DNS, NTP, and certificate validation are healthy.
 5. Confirm sufficient data-disk and datastore capacity remains.
@@ -193,7 +198,7 @@ A new appliance can report zero files and no incomplete files because its data d
 
 ## VCF Installer connection is blocked
 
-1. Open **Endpoint Connections** and select the affected VCF Installer.
+1. Open **VCF Connections** and select the affected VCF Installer.
 2. Open the detailed connection result.
 3. Resolve checks in dependency order: DNS, route, TCP, TLS identity and chain, API authentication, version detection, SSH, root elevation, depot authentication, and endpoint-originated retrieval.
 4. Correct the first failed dependency before rerunning the test.
@@ -237,7 +242,7 @@ SDDC Manager and Fleet Manager are not production-supported integration targets 
 **Why you may need this:** A new or rebuilt VCF Installer may serve a different certificate, or a connection may report that no issuing root CA is available.
 
 1. Confirm the endpoint FQDN, HTTPS port, DNS result, routing, and appliance time.
-2. In **Endpoint Connections**, confirm the endpoint details and select **Test connection** to retrieve its current certificate automatically. If private-CA options are visible, clear obsolete manual certificate selections before retrying.
+2. In **VCF Connections**, confirm the endpoint details and select **Test connection** to retrieve its current certificate automatically. If private-CA options are visible, clear obsolete manual certificate selections before retrying.
 3. For a self-signed endpoint, compare the displayed SHA-256 fingerprint with an independently trusted source. Accept only a match. A self-signed server certificate may have no separate root CA; do not upload an unrelated CA to work around this.
 4. If the endpoint uses an untrusted private CA, obtain its correct server certificate and issuing root CA from the endpoint owner and use the manual certificate options that appear.
 5. Correct an expired certificate or hostname/SAN mismatch on the endpoint. Retrieval does not make an invalid identity acceptable.

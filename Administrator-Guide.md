@@ -1,31 +1,36 @@
 # VCF Offline Depot
 ## Administrator Guide
 
-**Release baseline:** Appliance 1.0.0 - distribution build 2026-09-05.2
+**Release baseline:** Appliance 1.1.0 - distribution build 2026-09-07.1
 
-**Documentation revision:** 1.8 — 5 September 2026
+**Documentation revision:** 1.9 — 7 September 2026
 
-**Release status:** The previously agreed VCF Installer-only 1.0 GA acceptance work and R01 remain complete. This rebuilt OVA is ready for manual replacement deployment testing; fresh deployment and VCF Installer acceptance of this exact image are pending. SDDC Manager and Fleet Manager qualification (T04) remains deferred.
+**Release status:** Version 1.1.0 maintenance release. Consult the signed release record for validation of this exact OVA. VCF Installer remains the supported integration scope; SDDC Manager and Fleet Manager qualification remains deferred.
 
 **Audience:** Appliance administrators managing access, content, certificates, VCF Installer connections, configuration, and updates
 
 **Security model:** All GUI users are administrators; depot content requires a separate depot account
 
+## Bootable ESX installer media
+
+Choose **Install, including ESXi media** when downloading installation binaries. After the main VCF download, the appliance reads the release bill of materials and product catalog, then makes a separate VCF Download Tool request for the matching x86-64 bootable ESX ISO bundle ID. This includes installer media cataloged as PATCH instead of INSTALL. No separate manual ISO upload is required for an available entitled catalog entry.
+
+The job requires the expected ISO filename, size, and SHA-256 checksum before reporting success. For VCF 9.1.1, the catalog entry is `VMware-VMvisor-Installer-9.1.1.0.25714478.x86_64.iso`. A missing, ambiguous, or corrupt ISO fails the job instead of accepting a zero-result request. Correct the cause and retry the same release; the tool reuses existing content. Look under the ESX_HOST component in **Depot Files**. A fresh activation code is required for each new job and is removed after use.
+
 ## Navigation in this build
 
-During initial setup, open **Prepare Depot** and use its sidebar for Download Tool, Authorize & Download Binaries, Depot Accounts, HTTPS Certificate, and VCF Connections. Complete tool installation, depot accounts, and certificate activation before finishing the endpoint connection.
+The header provides **Authorize & Download**, **VCF Connections**, **Depot Files**, **Depot Management**, **Connection Logs**, and **Appliance Status**. During initial setup, **Prepare Depot** provides the guided steps for the Download Tool, authorization, Depot Accounts, HTTPS Certificate, and VCF Connections. After a saved endpoint becomes Connected, the setup workflow is hidden.
 
-Once a saved connection reports **Connected**, Prepare Depot and its setup sidebar are hidden. The main navigation then shows **Authorize & Download**, **Endpoint Connections**, **Offline Depot**, **Connection Logs**, and **Health Status**. A completed setup opens Health Status. Direct links to setup-only pages can return to Health Status; this build does not expose a separate post-setup maintenance entry for those pages. Do not remove a working connection record merely to reveal setup controls.
+**Depot Management** remains available before and after setup. Its three cards open Download Tool, Depot Accounts, and HTTPS Certificate. Use **Back to Depot Management** to return. Maintenance does not require disconnecting or deleting a working endpoint. After rotating depot credentials or renewing the certificate, review affected clients in **VCF Connections** and verify authenticated retrieval.
 
-Use the administrator account menu for **Appliance management**, **Appliance updates**, and **Admin user management**. Health Status displays effective settings and service health; Appliance management changes settings. In the compact management layout, Identity and Timezone sit side by side above Management network and DNS and time; cards stack on smaller screens. Management network, Upload and verify a release, and Create administrator use normal card borders without the former blue top accent.
-
+**Depot Files** opens the **Depot File Management** page for browsing, uploading, and managing release files. **Appliance Status** reports health and effective settings. The administrator menu contains **Appliance management**, **Appliance updates**, and **Admin user management**; these pages leave the primary header links unhighlighted.
 ## Administration boundaries
 
 Use the management GUI under `/admin/` for routine administration. Use vCenter or ESXi for VM lifecycle operations and console visibility.
 
 The VM console provides a restricted recovery menu instead of an Ubuntu login. Use the separate console recovery password to recover web access or authorize a restart. Inbound SSH is disabled. Retain the Ubuntu maintenance credential only for approved break-glass support; it does not provide a supported remote login path.
 
-The supported integration scope is **VCF Installer**; this exact rebuilt image still requires deployment acceptance. SDDC Manager and Fleet Manager integration is planned for a later qualified update.
+The supported integration scope is **VCF Installer**. Validate configuration and retrieval in your own environment before replacement. SDDC Manager and Fleet Manager integration is planned for a later qualified update.
 
 ## Sign in and navigate
 
@@ -157,7 +162,7 @@ Long-running server-side downloads continue after the browser session expires.
 
 1. Open the account menu.
 2. Select **Appliance management**.
-3. Review the editable identity, IPv4, DNS, NTP, and timezone settings. Open **Health Status** and select **Refresh status** to review effective values, synchronization, services, storage, and HTTPS identity.
+3. Review the editable identity, IPv4, DNS, NTP, and timezone settings. Open **Appliance Status** and select **Refresh status** to review effective values, synchronization, services, storage, and HTTPS identity.
 4. Compare the values with the deployment record and DNS/IPAM systems.
 5. Resolve any unexplained difference before making another change.
 
@@ -210,7 +215,7 @@ Long-running server-side downloads continue after the browser session expires.
 1. Open the administrator account menu and select **Appliance management**.
 2. In **Timezone**, choose an installed region and city, such as **America/New_York**, or **Etc/UTC**.
 3. Select **Save timezone** and confirm the current-timezone message matches your selection.
-4. Open **Health Status**, select **Refresh status**, and verify the timezone under **Time synchronization**.
+4. Open **Appliance Status**, select **Refresh status**, and verify the timezone under **Time synchronization**.
 5. Record the setting. After the next planned reboot, verify it is retained.
 
 The sealed OVA defaults to **Etc/UTC**. Saving the timezone is independent of **Apply configuration**: it does not apply pending identity or network edits, change the NTP server list, or restart NTP. NTP synchronizes the clock independently of the timezone. Configure up to two NTP sources in **DNS and time**, then use **Apply configuration** for those changes.
@@ -219,14 +224,14 @@ The inventory UPDATED badge uses the browser workstation's local date and time. 
 
 ## Manage depot accounts
 
-These account procedures require the initial setup pages. Once setup is complete, this build hides those pages; arrange a supported maintenance procedure before attempting post-setup account changes.
+These account controls remain available under **Depot Management > Depot Accounts** after setup. Review each affected endpoint before changing an account.
 
 
 ### Create a depot account
 
 **Why you may need this:** Create a dedicated client identity when connecting a new VCF Installer or separating access by environment or owner.
 
-1. During initial setup, open **Prepare Depot**, then **Depot Accounts**.
+1. Open **Depot Management > Depot Accounts** (or **Prepare Depot > Depot Accounts** during initial setup).
 2. Select the account-creation section.
 3. Enter a unique client username.
 4. Enter and confirm a strong password.
@@ -241,7 +246,7 @@ These account procedures require the initial setup pages. Once setup is complete
 **Why you may need this:** Rotate the credential on schedule, after possible exposure, or when responsibility for the connected endpoint changes.
 
 1. Identify every client using the account.
-2. During initial setup, open **Prepare Depot**, then **Depot Accounts** and select the account.
+2. Open **Depot Management > Depot Accounts** (or **Prepare Depot > Depot Accounts** during initial setup) and select the account.
 3. Enter and confirm the new password.
 4. Apply the rotation.
 5. Update the VCF Installer connection with the new credential.
@@ -254,7 +259,7 @@ These account procedures require the initial setup pages. Once setup is complete
 **Why you may need this:** Remove access when an endpoint is retired, an account is replaced, or a client should no longer retrieve depot content.
 
 1. Confirm no VCF Installer or other approved client still uses the account.
-2. During initial setup, open **Prepare Depot**, then **Depot Accounts**.
+2. Open **Depot Management > Depot Accounts** (or **Prepare Depot > Depot Accounts** during initial setup).
 3. Select the username.
 4. Review the account identity.
 5. Select **Remove account**.
@@ -266,14 +271,14 @@ Account removal does not recall files already downloaded by a client.
 
 ## Install or replace the VCF Download Tool
 
-This GUI workflow is available during initial setup. The Download Tool page is hidden after a connection reaches Connected; do not assume a post-setup tool replacement entry is available in this build.
+Open Depot Management to maintain the tool at any time. Let active downloads finish before replacing it.
 
 
 **Why you may need this:** Install the tool on a new appliance or replace it when Broadcom releases a supported version required for newer VCF content.
 
 1. Obtain the supported Linux AMD64 VCF Download Tool archive from the approved vendor source.
 2. Verify its source and checksum according to policy.
-3. During initial setup, open **Prepare Depot**, then **Download Tool**.
+3. Open **Depot Management > Download Tool** (or **Prepare Depot > Download Tool** during initial setup).
 4. Select the tool archive.
 5. Start the upload and installation.
 6. Wait for archive validation and safe extraction to complete.
@@ -287,8 +292,8 @@ This GUI workflow is available during initial setup. The Download Tool page is h
 
 1. Open **Authorize & Download Binaries** under Prepare Depot, or **Authorize & Download** after setup.
 2. Confirm the active VCF Download Tool version.
-3. Enter a short-lived access token or use the supported vendor credential exchange.
-4. Retrieve and verify the Software Depot ID when required.
+3. Select Get Software Depot ID and register it through Broadcom to obtain an entitled activation code.
+4. Verify that the activation code belongs to this appliance Software Depot ID.
 5. Enter the Broadcom activation code through the protected field.
 6. Select the intended VCF release and download type.
 7. Confirm entitlement and available storage.
@@ -305,7 +310,7 @@ Do not retain tokens, vendor passwords, or activation credentials in screenshots
 
 **Why you may need this:** Refresh after downloads, content removal, storage recovery, or an unexpected inventory result so the GUI matches the files currently on disk.
 
-1. Open **Offline Depot**.
+1. Open **Depot Files**.
 2. Confirm no appliance update or filesystem maintenance is running.
 3. Select **Refresh inventory** once.
 4. Confirm the button and local status show an active scan.
@@ -316,14 +321,14 @@ Do not retain tokens, vendor passwords, or activation credentials in screenshots
 
 ## Manage HTTPS certificates
 
-The following certificate controls are on the initial setup pages. After setup is complete, review the active HTTPS identity in Health Status; certificate replacement requires a supported maintenance procedure because the setup page is hidden.
+Open **Depot Management > HTTPS Certificate** for the following certificate controls. These remain available after setup.
 
 
 ### Review and export the active certificate
 
 **Why you may need this:** Review certificate identity and expiration during routine checks, troubleshooting, audits, or before distributing the issuing CA to a client.
 
-1. During initial setup, open **Prepare Depot**, then **HTTPS Certificate**.
+1. Open **Depot Management > HTTPS Certificate** (or **Prepare Depot > HTTPS Certificate** during initial setup).
 2. Expand the current-certificate section.
 3. Review subject, SANs, issuer, validity, fingerprint, and chain.
 4. Download the certificate chain, server certificate, or root CA when required.
@@ -335,7 +340,7 @@ The private key is not exported by this workflow.
 
 **Why you may need this:** Generate a CSR when replacing the temporary certificate, renewing an expiring certificate, or adding a new DNS name or IP SAN.
 
-1. During initial setup, open **Prepare Depot**, then **HTTPS Certificate**.
+1. Open **Depot Management > HTTPS Certificate** (or **Prepare Depot > HTTPS Certificate** during initial setup).
 2. Enter the final common name.
 3. Add every required DNS name and IP address as a SAN.
 4. Review the requested identity.
@@ -352,7 +357,7 @@ Only one CSR can remain pending. Download or discard it before generating anothe
 
 1. Confirm the signed server certificate matches the pending CSR.
 2. Obtain the intermediate certificates and issuing root CA.
-3. During initial setup, open **Prepare Depot**, then **HTTPS Certificate**.
+3. Open **Depot Management > HTTPS Certificate** (or **Prepare Depot > HTTPS Certificate** during initial setup).
 4. Upload the signed server certificate, intermediates, and root.
 5. Select the option to replace the active certificate.
 6. Select **Convert and activate**.
@@ -369,7 +374,7 @@ The previous certificate and key are retained as a protected backup by the suppo
 
 **Why you may need this:** Add a connection when onboarding a VCF Installer or retest it after credential, certificate, DNS, network, or endpoint changes.
 
-1. Open **Endpoint Connections**.
+1. Open **VCF Connections**.
 2. Add a named connection.
 3. Select **VCF Installer** as the endpoint type.
 4. Enter the endpoint FQDN or IP and HTTPS port.
@@ -387,7 +392,7 @@ The previous certificate and key are retained as a protected backup by the suppo
 
 **Why you may need this:** VCF Installer may present a self-signed server certificate rather than a certificate issued by a separate root CA. This workflow retrieves that certificate from the endpoint so you do not have to export and upload it manually.
 
-1. Enter the endpoint FQDN and HTTPS port in **Endpoint Connections**.
+1. Enter the endpoint FQDN and HTTPS port in **VCF Connections**.
 2. Select **Test connection**. Certificate retrieval starts automatically; **Configure endpoint** uses the same approval flow. For VCF Installer, the normal form has no separate certificate section or retrieval button. Fleet Manager and SDDC Manager retain their visible certificate-trust section, uploads, and retrieval button.
 3. If the endpoint is already trusted by the appliance, testing continues without a certificate approval prompt.
 4. For an untrusted self-signed endpoint, review the pop-up showing the endpoint, subject, expiration, and SHA-256 fingerprint.
@@ -425,7 +430,7 @@ Do not configure SDDC Manager or Fleet Manager in production with this release.
 2. Select the relevant time range or endpoint.
 3. Locate the connection test, configuration, or retrieval request.
 4. Review the phase, status code, duration, and sanitized failure detail.
-5. Correlate the entry with the local status shown on Endpoint Connections.
+5. Correlate the entry with the local status shown on VCF Connections.
 6. Export or capture only the evidence required for troubleshooting.
 7. Verify passwords, tokens, authorization headers, and private keys are absent before sharing evidence.
 
