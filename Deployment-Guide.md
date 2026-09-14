@@ -1,11 +1,11 @@
 # VCF Offline Depot
 ## ESXi and vCenter Deployment Guide
 
-**Release baseline:** Appliance 1.1.0 - distribution build 2026-09-07.1
+**Release baseline:** Appliance 1.1.0 - distribution build 2026-09-13.1
 
-**Documentation revision:** 1.9 — 7 September 2026
+**Documentation revision:** 2.0 — 13 September 2026
 
-**Release status:** Version 1.1.0 maintenance release. Consult the signed release record for validation of this exact OVA. VCF Installer remains the supported integration scope; SDDC Manager and Fleet Manager qualification remains deferred.
+**Release status:** Final 1.1 distribution. See release-record.json for exact OVA validation.
 
 **Audience:** Virtualization administrators deploying the appliance through the standalone ESXi Host Client or the vCenter vSphere Client
 
@@ -28,7 +28,7 @@ The header provides **Authorize & Download**, **VCF Connections**, **Depot Files
 
 The supported integration scope is **VCF Installer**. See the signed release record for the checks performed on this build. The qualified workflow covers certificate trust, SSH access through the `vcf` account with root elevation, endpoint property configuration, service restart and stabilization, authenticated metadata retrieval, and representative binary retrieval.
 
-SDDC Manager and Fleet Manager integration is planned for a later update. Do not configure those endpoint types in production until a release explicitly lists them as supported.
+ Do not configure those endpoint types in production until a release explicitly lists them as supported.
 
 ## Before you deploy
 
@@ -45,7 +45,7 @@ SDDC Manager and Fleet Manager integration is planned for a later update. Do not
 
 This OVA creates a fresh appliance with a blank depot-data disk. It does not migrate accounts, endpoint configuration, certificates, binaries, or download history. Preserve the existing VM and data until replacement acceptance is complete. Use a separate test address or power off the old VM before reusing its IP address. Complete the setup workflows on the new appliance and verify endpoint retrieval before retiring the old VM.
 
-Record appliance version **1.1.0**, build **2026-09-07.1**, and the supplied OVA SHA-256 in the deployment record.
+Record appliance version **1.1.0**, build **2026-09-13.1**, and the supplied OVA SHA-256 in the deployment record.
 
 ### Confirm platform capacity
 
@@ -367,7 +367,7 @@ Self-signed certificate approval lasts for the current page session and endpoint
 
 **If it fails:** Open the detailed result and resolve checks in dependency order. A passed connection test alone does not mean endpoint configuration completed.
 
-SDDC Manager and Fleet Manager are not production-supported connection targets in this release.
+
 
 ## Verify final depot access
 
@@ -438,3 +438,28 @@ Record vault references rather than passwords.
 | Depot disk is unavailable | Missing blank data disk, mount failure, or storage issue | Stop content operations and investigate before writing or formatting |
 | VCF Installer configuration is blocked | A required preflight, SSH, trust, restart, or retrieval check failed | Open the detailed result, correct the first failed dependency, and rerun the workflow |
 | Test passes but status is not Connected | Preflight passed but endpoint configuration has not completed | Run Configure endpoint and wait for restart and post-change verification |
+
+
+## Final build 2026 09 13 updates
+
+This appliance is intended for VCF 9.1 and newer, with workflow testing demonstrated on VCF 9.1.1. VCF Installer is the supported connection target. Verify compatibility before adopting a later VCF release.
+
+### Installer downloads
+
+Authorize & Download includes controls for initial deployment and later release retrieval by a saved VCF Installer. Select the Installer and a release available on the depot, supply the required Installer credentials, refresh availability, and start retrieval. Follow the displayed task status; depot download completion and Installer retrieval are separate operations.
+
+### Restricted service account
+
+The management web service runs as depot-web with no new privileges. A root-owned helper accepts only allowed operations through a local Unix socket. Do not grant the web service root access or access to the Docker socket to troubleshoot a failed download.
+
+### Network recovery and signed updates
+
+Network changes require confirmation and have a recovery deadline. Confirm working connectivity before that deadline. Signed application updates are validated by the privileged helper and retain an application rollback and protected configuration snapshot.
+
+### Health and diagnostics
+
+Appliance Status collects diagnostics asynchronously and displays measurement age. Unknown storage or certificate readings and a stopped content container produce health alerts. Repeated support bundle requests are limited while collection is in progress.
+
+### Download validation
+
+The final live runtime successfully refreshed Broadcom metadata after re-registration. Existing binaries were retained, so that check did not transfer a fresh binary payload. Metadata and ESX installer ISO retrieval over authenticated HTTPS passed. Consult release-record.json for fresh deployment results for the exact public OVA.

@@ -1,11 +1,11 @@
 # VCF Offline Depot
 ## Troubleshooting and Appliance Update Guide
 
-**Release baseline:** Appliance 1.1.0 - distribution build 2026-09-07.1
+**Release baseline:** Appliance 1.1.0 - distribution build 2026-09-13.1
 
-**Documentation revision:** 1.9 — 7 September 2026
+**Documentation revision:** 2.0 — 13 September 2026
 
-**Release status:** Version 1.1.0 maintenance release. Consult the signed release record for validation of this exact OVA. VCF Installer remains the supported integration scope; SDDC Manager and Fleet Manager qualification remains deferred.
+**Release status:** Final 1.1 distribution. See release-record.json for exact OVA validation.
 
 **Audience:** Appliance administrators diagnosing failures, restoring service, or installing a future signed release
 
@@ -224,7 +224,7 @@ A new appliance can report zero files and no incomplete files because its data d
 9. Treat the endpoint as complete only when the saved status is **Connected**.
 10. If the operation fails, preserve the detailed phase result and service logs before retrying.
 
-SDDC Manager and Fleet Manager are not production-supported integration targets in this release. Do not modify those appliances to imitate the VCF Installer property model.
+ Do not modify those appliances to imitate the VCF Installer property model.
 
 ## Update package is rejected before installation
 
@@ -388,3 +388,27 @@ Use this procedure when no web administrator can sign in. It does not require an
 8. Review administrator accounts and retain the recovery password in the approved password vault.
 
 Failed recovery attempts are delayed, and the delay persists across menu restarts and appliance reboots. Inputs time out after 60 seconds. The recovery password cannot be displayed or retrieved. If it is lost, another web administrator can still manage web accounts; there is no unauthenticated recovery bypass. Protect hypervisor console and VM configuration permissions because a hypervisor administrator controls the appliance disks and boot environment.
+
+## Final build 2026 09 13 updates
+
+This appliance is intended for VCF 9.1 and newer, with workflow testing demonstrated on VCF 9.1.1. VCF Installer is the supported connection target. Verify compatibility before adopting a later VCF release.
+
+### Installer downloads
+
+Authorize & Download includes controls for initial deployment and later release retrieval by a saved VCF Installer. Select the Installer and a release available on the depot, supply the required Installer credentials, refresh availability, and start retrieval. Follow the displayed task status; depot download completion and Installer retrieval are separate operations.
+
+### Restricted service account
+
+The management web service runs as depot-web with no new privileges. A root-owned helper accepts only allowed operations through a local Unix socket. Do not grant the web service root access or access to the Docker socket to troubleshoot a failed download.
+
+### Network recovery and signed updates
+
+Network changes require confirmation and have a recovery deadline. Confirm working connectivity before that deadline. Signed application updates are validated by the privileged helper and retain an application rollback and protected configuration snapshot.
+
+### Health and diagnostics
+
+Appliance Status collects diagnostics asynchronously and displays measurement age. Unknown storage or certificate readings and a stopped content container produce health alerts. Repeated support bundle requests are limited while collection is in progress.
+
+### Download validation
+
+The final live runtime successfully refreshed Broadcom metadata after re-registration. Existing binaries were retained, so that check did not transfer a fresh binary payload. Metadata and ESX installer ISO retrieval over authenticated HTTPS passed. Consult release-record.json for fresh deployment results for the exact public OVA.

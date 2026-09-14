@@ -1,11 +1,11 @@
 # VCF Offline Depot
 ## Administrator Guide
 
-**Release baseline:** Appliance 1.1.0 - distribution build 2026-09-07.1
+**Release baseline:** Appliance 1.1.0 - distribution build 2026-09-13.1
 
-**Documentation revision:** 1.9 — 7 September 2026
+**Documentation revision:** 2.0 — 13 September 2026
 
-**Release status:** Version 1.1.0 maintenance release. Consult the signed release record for validation of this exact OVA. VCF Installer remains the supported integration scope; SDDC Manager and Fleet Manager qualification remains deferred.
+**Release status:** Final 1.1 distribution. See release-record.json for exact OVA validation.
 
 **Audience:** Appliance administrators managing access, content, certificates, VCF Installer connections, configuration, and updates
 
@@ -30,7 +30,7 @@ Use the management GUI under `/admin/` for routine administration. Use vCenter o
 
 The VM console provides a restricted recovery menu instead of an Ubuntu login. Use the separate console recovery password to recover web access or authorize a restart. Inbound SSH is disabled. Retain the Ubuntu maintenance credential only for approved break-glass support; it does not provide a supported remote login path.
 
-The supported integration scope is **VCF Installer**. Validate configuration and retrieval in your own environment before replacement. SDDC Manager and Fleet Manager integration is planned for a later qualified update.
+The supported integration scope is **VCF Installer**. Validate configuration and retrieval in your own environment before replacement.
 
 ## Sign in and navigate
 
@@ -393,7 +393,7 @@ The previous certificate and key are retained as a protected backup by the suppo
 **Why you may need this:** VCF Installer may present a self-signed server certificate rather than a certificate issued by a separate root CA. This workflow retrieves that certificate from the endpoint so you do not have to export and upload it manually.
 
 1. Enter the endpoint FQDN and HTTPS port in **VCF Connections**.
-2. Select **Test connection**. Certificate retrieval starts automatically; **Configure endpoint** uses the same approval flow. For VCF Installer, the normal form has no separate certificate section or retrieval button. Fleet Manager and SDDC Manager retain their visible certificate-trust section, uploads, and retrieval button.
+2. Select **Test connection**. Certificate retrieval starts automatically; **Configure endpoint** uses the same approval flow. For VCF Installer, the normal form has no separate certificate section or retrieval button.
 3. If the endpoint is already trusted by the appliance, testing continues without a certificate approval prompt.
 4. For an untrusted self-signed endpoint, review the pop-up showing the endpoint, subject, expiration, and SHA-256 fingerprint.
 5. Compare the fingerprint with the endpoint console or another independently trusted source. Select **Cancel** if it does not match. Discovery itself does not send endpoint sign-in credentials.
@@ -420,7 +420,7 @@ Test and Configure retrieve the current certificate each time. An unchanged cert
 
 A passed connection test alone does not mean the endpoint has been configured.
 
-Do not configure SDDC Manager or Fleet Manager in production with this release.
+
 
 ## Review connection logs
 
@@ -477,3 +477,28 @@ Use the Troubleshooting and Appliance Update Guide for the complete pre-update c
 Only TCP 443 (HTTPS) and TCP 80 (HTTPS redirect) are allowed inbound. Application and Docker backend ports are private. Inbound SSH remains disabled. Outbound DNS, time synchronization, entitled downloads, and VCF endpoint connections remain available. Place the appliance on a controlled management network and restrict source addresses at the network level.
 
 Use the Troubleshooting Guide's console recovery procedure if web credentials are lost. Store the separate recovery password in a vault and restrict vCenter/ESXi console permissions.
+
+
+## Final build 2026 09 13 updates
+
+This appliance is intended for VCF 9.1 and newer, with workflow testing demonstrated on VCF 9.1.1. VCF Installer is the supported connection target. Verify compatibility before adopting a later VCF release.
+
+### Installer downloads
+
+Authorize & Download includes controls for initial deployment and later release retrieval by a saved VCF Installer. Select the Installer and a release available on the depot, supply the required Installer credentials, refresh availability, and start retrieval. Follow the displayed task status; depot download completion and Installer retrieval are separate operations.
+
+### Restricted service account
+
+The management web service runs as depot-web with no new privileges. A root-owned helper accepts only allowed operations through a local Unix socket. Do not grant the web service root access or access to the Docker socket to troubleshoot a failed download.
+
+### Network recovery and signed updates
+
+Network changes require confirmation and have a recovery deadline. Confirm working connectivity before that deadline. Signed application updates are validated by the privileged helper and retain an application rollback and protected configuration snapshot.
+
+### Health and diagnostics
+
+Appliance Status collects diagnostics asynchronously and displays measurement age. Unknown storage or certificate readings and a stopped content container produce health alerts. Repeated support bundle requests are limited while collection is in progress.
+
+### Download validation
+
+The final live runtime successfully refreshed Broadcom metadata after re-registration. Existing binaries were retained, so that check did not transfer a fresh binary payload. Metadata and ESX installer ISO retrieval over authenticated HTTPS passed. Consult release-record.json for fresh deployment results for the exact public OVA.
