@@ -1,11 +1,11 @@
 # VCF Offline Depot
 ## Administrator Guide
 
-**Release baseline:** Appliance 1.1.0 - distribution build 2026-09-13.1
+**Release baseline:** Appliance 1.2.0 - distribution build 2026-10-01.1
 
-**Documentation revision:** 2.0 — 13 September 2026
+**Documentation revision:** 2.1 — 1 October 2026
 
-**Release status:** Final 1.1 distribution. See release-record.json for exact OVA validation.
+**Release status:** Version 1.2 distribution. See release-record.json for exact OVA validation.
 
 **Audience:** Appliance administrators managing access, content, certificates, VCF Installer connections, configuration, and updates
 
@@ -297,7 +297,9 @@ Open Depot Management to maintain the tool at any time. Let active downloads fin
 5. Enter the Broadcom activation code through the protected field.
 6. Select the intended VCF release and download type.
 7. Confirm entitlement and available storage.
-8. Select **Start release download**.
+8. For optional components and BOM-matched Avi media, select **All remaining binaries**.
+
+Select **Start release download**.
 9. Confirm the page moves to **Download activity**.
 10. Monitor current file, completed files, transferred size, rate, and errors.
 11. If interrupted, correct the cause and retry the same job. Verified files should be retained.
@@ -479,26 +481,26 @@ Only TCP 443 (HTTPS) and TCP 80 (HTTPS redirect) are allowed inbound. Applicatio
 Use the Troubleshooting Guide's console recovery procedure if web credentials are lost. Store the separate recovery password in a vault and restrict vCenter/ESXi console permissions.
 
 
-## Final build 2026 09 13 updates
 
-This appliance is intended for VCF 9.1 and newer, with workflow testing demonstrated on VCF 9.1.1. VCF Installer is the supported connection target. Verify compatibility before adopting a later VCF release.
 
-### Installer downloads
+## Version 1 2 updates
 
-Authorize & Download includes controls for initial deployment and later release retrieval by a saved VCF Installer. Select the Installer and a release available on the depot, supply the required Installer credentials, refresh availability, and start retrieval. Follow the displayed task status; depot download completion and Installer retrieval are separate operations.
+### All remaining binaries
 
-### Restricted service account
+In Authorize & Download, select the VCF release, choose All remaining binaries, enter the normal Broadcom activation code and start the job. This requests each supported component for the selected release, including Operations for Logs. It includes available install, upgrade and patch content and may require substantially more disk space than the initial deployment set. Existing files are reused. It does not download every historical VCF release or products unavailable through the installed Download Tool and entitlement.
 
-The management web service runs as depot-web with no new privileges. A root-owned helper accepts only allowed operations through a local Unix socket. Do not grant the web service root access or access to the Docker socket to troubleshoot a failed download.
+### Automatic Avi selection
 
-### Network recovery and signed updates
+All remaining binaries also reads the selected release bill of materials and matches the exact NSX_ALB component version in the product catalog. It requests the matching bundle IDs and verifies each binary size and SHA-256 checksum. For VCF 9.1.1.0, the tested mapping is Avi 32.1.3.25665611 and controller-32.1.3-9105.ova. No manual bundle ID or separate Avi configuration is needed. Missing or ambiguous metadata produces a clear failure instead of selecting another version.
 
-Network changes require confirmation and have a recovery deadline. Confirm working connectivity before that deadline. Signed application updates are validated by the privileged helper and retain an application rollback and protected configuration snapshot.
+### Reused files and completion status
 
-### Health and diagnostics
+The appliance counts both SUCCESS and ALREADY_DOWNLOADED results. A repeat job can complete with no newly transferred binaries. Catalog-verified files without a depot-manifest YAML, including Avi OVAs, are retained during failed-job cleanup. Cross-filesystem quarantine supports copying before removing the original, and cleanup errors are recorded as failures instead of crashing the management service and leaving a stale running status.
 
-Appliance Status collects diagnostics asynchronously and displays measurement age. Unknown storage or certificate readings and a stopped content container produce health alerts. Repeated support bundle requests are limited while collection is in progress.
+### Validation and release scope
 
-### Download validation
+The live VCF 9.1.1 workflow downloaded Avi 32.1.3 and verified its checksum. Operations for Logs files were verified against catalog sizes and SHA-256 checksums; the repeated request reused these files. Automated tests cover selection, reused-file counting, missing and corrupt content, and cleanup errors. Consult the signed release-record.json for fresh deployment and reboot results for the exact 1.2 OVA. Installer retrieval was not repeated as part of these binary-download fixes.
 
-The final live runtime successfully refreshed Broadcom metadata after re-registration. Existing binaries were retained, so that check did not transfer a fresh binary payload. Metadata and ESX installer ISO retrieval over authenticated HTTPS passed. Consult release-record.json for fresh deployment results for the exact public OVA.
+### Deploying version 1 2
+
+This OVA creates a fresh appliance. Importing it does not migrate an existing depot configuration, credentials or binaries. The live depot received the binary-download fixes separately. VCF 9.1 and newer is the intended scope, with workflow testing demonstrated on VCF 9.1.1; validate compatibility before adopting a later release.

@@ -1,10 +1,10 @@
 # VCF Offline Depot for VCF 9.1 and newer
 
-**Appliance 1.1.0 · final build 2026-09-13.1**
+**Appliance 1.2.0 Â· final build 2026-10-01.1**
 
-Download the deployable OVA and updated guides from the [latest qualified release](https://github.com/raleyj/vcf-depot/releases/tag/v1.1.0-build.2026-09-13.1). GitHub source archives do not contain the appliance. This build supersedes the September 7 OVA while retaining version 1.1.0.
+Download the deployable OVA and updated guides from the [latest qualified release](https://github.com/raleyj/vcf-depot/releases/tag/v1.2.0-build.2026-10-01.1). GitHub source archives do not contain the appliance. This release adds broader binary downloads, automatic Avi bundle selection, and download integrity fixes.
 
-The appliance provides authenticated HTTPS depot storage, Broadcom VCF Download Tool workflows including matching bootable ESX media, certificate and account management, and VCF Installer connection and release-retrieval controls. It is intended for VCF 9.1 and newer, with workflow testing demonstrated on VCF 9.1.1. Verify compatibility before adopting later VCF releases.
+The appliance provides authenticated HTTPS depot storage, Broadcom VCF Download Tool workflows including matching bootable ESX media, All remaining binaries, and BOM-matched Avi media, certificate and account management, and VCF Installer connection and release-retrieval controls. It is intended for VCF 9.1 and newer, with workflow testing demonstrated on VCF 9.1.1. Verify compatibility before adopting later VCF releases.
 
 ## Guides
 
@@ -12,9 +12,9 @@ The appliance provides authenticated HTTPS depot storage, Broadcom VCF Download 
 - [Quick Start Guide](VCF-Offline-Depot-Quick-Start-Guide.docx)
 - [Administrator Guide](VCF-Offline-Depot-Administrator-Guide.docx)
 - [Troubleshooting Guide](VCF-Offline-Depot-Troubleshooting-Guide.docx)
-- [Release notes](Release-Notes-1.1.0.md)
+- [Release notes](Release-Notes-1.2.0.md)
 
-Guides are revision 2.0 and are included in the OVA. Download the OVA, SHA256SUMS, SHA256SUMS.sig, and release-signing-key.pub.pem from the release page. Establish trust in the signing key independently before verifying the signature:
+Guides are revision 2.1 and are included in the OVA. Download the OVA, SHA256SUMS, SHA256SUMS.sig, and release-signing-key.pub.pem from the release page. Establish trust in the signing key independently before verifying the signature:
 
 ```sh
 openssl dgst -sha256 -verify release-signing-key.pub.pem -signature SHA256SUMS.sig SHA256SUMS
@@ -27,4 +27,4 @@ Public-key SPKI SHA256: `312d7a9bf4df037fadbe50b8cd8e876e66db66ce40ca079e5700b06
 
 Deploy with 4 vCPUs, 8 GiB RAM, a 32 GiB OS disk, and a new thin-provisioned 1 TiB depot disk. Supply your own distinct deployment passwords, supported Linux VCF Download Tool, Broadcom entitlement, and environment certificates. The OVA contains no downloaded VCF binaries or credentials. Importing a new OVA does not migrate an existing depot.
 
-The exact OVA passed fresh DHCP deployment, administrator login, automatic content startup, restricted service identity, authenticated HTTPS range retrieval, payload hash validation, and reboot persistence. The live final runtime also passed Broadcom metadata refresh with existing binaries retained. See the signed release-record.json for the exact validation scope.
+The exact OVA passed fresh DHCP deployment, administrator login, automatic content startup, restricted service identity, authenticated HTTPS range retrieval, payload hash validation, and reboot persistence. The updated live runtime downloaded the BOM-matched Avi controller and passed checksum verification for Avi and Operations for Logs. Entitled bulk download and Installer retrieval were not repeated on the fresh OVA. See the signed release-record.json for the exact validation scope.

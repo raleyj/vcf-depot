@@ -1,6 +1,6 @@
 # Verify VCF Offline Depot downloads
 
-Current appliance version **1.1.0**, final build **2026-09-13.1**. Obtain the OVA, SHA256SUMS, SHA256SUMS.sig, and release-signing-key.pub.pem from the [qualified release](https://github.com/raleyj/vcf-depot/releases/tag/v1.1.0-build.2026-09-13.1).
+Current appliance version **1.2.0**, final build **2026-10-01.1**. Obtain the OVA, SHA256SUMS, SHA256SUMS.sig, and release-signing-key.pub.pem from the [qualified release](https://github.com/raleyj/vcf-depot/releases/tag/v1.2.0-build.2026-10-01.1).
 
 Establish trust in the release public key independently before checking signatures. Expected public-key SPKI SHA256:
 
