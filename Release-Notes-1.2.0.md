@@ -1,6 +1,6 @@
 # VCF Offline Depot 1.2
 
-Appliance version **1.2.0**, distribution build **2026-10-01.1**, for **VCF 9.1 and newer**. Workflow testing is demonstrated on VCF 9.1.1; verify compatibility before adopting later releases.
+Appliance version **1.2.0**, distribution build **2026-10-07.1**, with **VCF 9.0.x download and hosting support**. Workflow testing is demonstrated on VCF 9.1.1; verify compatibility before adopting later releases.
 
 ## Changes
 
@@ -29,3 +29,14 @@ Deploy with 4 vCPUs, 8 GiB memory, a 32 GiB OS disk, and a new 1 TiB thin-provis
 This OVA creates a fresh appliance. It does not migrate existing configuration, credentials or binaries. No Broadcom download tool, activation code, downloaded VCF binaries, or deployment credentials are included. This release does not replace your running appliance automatically.
 
 Verify the signed SHA256SUMS using an independently trusted copy of the release public key before deployment. This community appliance's lab qualification is not vendor support certification.
+
+
+## October 7 rebuild
+
+VCF 9.0.x supports binary download and hosting. Automatic VCF Installer retrieval is limited to VCF 9.1 and later. Exact release matching prevents substitution with a newer component version.
+
+For VCF 9.0.2, OSA Witness, ESA Witness, VMware Tools, VMRC, Live Recovery and Data Services Manager are excluded from automatic downloads when the exact files are absent from the Download Tool catalog. Obtain these separately from the Broadcom Support Portal if needed. If a later catalog publishes an exact mapping, the appliance downloads it normally.
+
+For VCF 9.0.2, Supervisor, VKS and Velero are covered by the embedded package in the vCenter update repository. The appliance verifies that package against its reviewed SHA-256 checksum. This verifies the containing package, not a deployment of the services or a separate audit of each container image.
+
+Completion applies to supported automatic-download sources only. The job output lists exclusions. Missing unexpected mappings, failed transfers, authentication errors and failed checksum verification still report an incomplete job. Private AI is not silently excluded; its observed HTTP 403 remains a download failure.

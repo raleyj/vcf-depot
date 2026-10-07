@@ -1,9 +1,9 @@
 # VCF Offline Depot
 ## Troubleshooting and Appliance Update Guide
 
-**Release baseline:** Appliance 1.2.0 - distribution build 2026-10-01.1
+**Release baseline:** Appliance 1.2.0 - distribution build 2026-10-07.1
 
-**Documentation revision:** 2.1 — 1 October 2026
+**Documentation revision:** 2.2 — 7 October 2026
 
 **Release status:** Version 1.2 distribution. See release-record.json for exact OVA validation.
 
@@ -411,4 +411,15 @@ The live VCF 9.1.1 workflow downloaded Avi 32.1.3 and verified its checksum. Ope
 
 ### Deploying version 1 2
 
-This OVA creates a fresh appliance. Importing it does not migrate an existing depot configuration, credentials or binaries. The live depot received the binary-download fixes separately. VCF 9.1 and newer is the intended scope, with workflow testing demonstrated on VCF 9.1.1; validate compatibility before adopting a later release.
+This OVA creates a fresh appliance. Importing it does not migrate an existing depot configuration, credentials or binaries. The live depot received the binary-download fixes separately. VCF 9.0.x supports binary download and hosting. Automatic VCF Installer retrieval is limited to VCF 9.1 and later. Exact release matching prevents substitution with a newer component version.
+
+
+## October 7 download scope update
+
+VCF 9.0.x supports binary download and hosting. Automatic VCF Installer retrieval is limited to VCF 9.1 and later. Exact release matching prevents substitution with a newer component version.
+
+For VCF 9.0.2, OSA Witness, ESA Witness, VMware Tools, VMRC, Live Recovery and Data Services Manager are excluded from automatic downloads when the exact files are absent from the Download Tool catalog. Obtain these separately from the Broadcom Support Portal if needed. If a later catalog publishes an exact mapping, the appliance downloads it normally.
+
+For VCF 9.0.2, Supervisor, VKS and Velero are covered by the embedded package in the vCenter update repository. The appliance verifies that package against its reviewed SHA-256 checksum. This verifies the containing package, not a deployment of the services or a separate audit of each container image.
+
+Completion applies to supported automatic-download sources only. The job output lists exclusions. Missing unexpected mappings, failed transfers, authentication errors and failed checksum verification still report an incomplete job. Private AI is not silently excluded; its observed HTTP 403 remains a download failure.
