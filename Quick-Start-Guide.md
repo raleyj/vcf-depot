@@ -1,11 +1,11 @@
 # VCF Offline Depot
 ## Quick Start Guide
 
-**Release baseline:** Appliance 1.2.0 - distribution build 2026-10-07.1
+**Release baseline:** Appliance 1.2.0 - build 2026-10-07.1
 
-**Documentation revision:** 2.2 — 7 October 2026
+**Documentation revision:** 2026-10-07.1
 
-**Release status:** Version 1.2 distribution. See release-record.json for exact OVA validation.
+**Release status:** Final distribution. See the release record for exact OVA qualification and publication status.
 
 **Audience:** Administrators completing initial appliance setup after deployment
 
@@ -21,7 +21,7 @@ The job requires the expected ISO filename, size, and SHA-256 checksum before re
 
 The header provides **Authorize & Download**, **VCF Connections**, **Depot Files**, **Depot Management**, **Connection Logs**, and **Appliance Status**. During initial setup, **Prepare Depot** provides the guided steps for the Download Tool, authorization, Depot Accounts, HTTPS Certificate, and VCF Connections. After a saved endpoint becomes Connected, the setup workflow is hidden.
 
-**Depot Management** remains available before and after setup. Its three cards open Download Tool, Depot Accounts, and HTTPS Certificate. Use **Back to Depot Management** to return. Maintenance does not require disconnecting or deleting a working endpoint. After rotating depot credentials or renewing the certificate, review affected clients in **VCF Connections** and verify authenticated retrieval.
+**Depot Management** remains available before and after setup. Its four cards open Download Tool, Depot Accounts, HTTPS Certificate, and Software Depot Publishing. Use **Back to Depot Management** to return. Software Depot Publishing is optional and transfers one locally verified, exact BOM-mapped bundle to a separate VCF Operations Software Depot.
 
 **Depot Files** opens the **Depot File Management** page for browsing, uploading, and managing release files. **Appliance Status** reports health and effective settings. The administrator menu contains **Appliance management**, **Appliance updates**, and **Admin user management**; these pages leave the primary header links unhighlighted.
 ## Before you start

@@ -1,11 +1,11 @@
 # VCF Offline Depot
 ## Administrator Guide
 
-**Release baseline:** Appliance 1.2.0 - distribution build 2026-10-07.1
+**Release baseline:** Appliance 1.2.0 - build 2026-10-07.1
 
-**Documentation revision:** 2.2 — 7 October 2026
+**Documentation revision:** 2026-10-07.1
 
-**Release status:** Version 1.2 distribution. See release-record.json for exact OVA validation.
+**Release status:** Final distribution. See the release record for exact OVA qualification and publication status.
 
 **Audience:** Appliance administrators managing access, content, certificates, VCF Installer connections, configuration, and updates
 
@@ -21,7 +21,7 @@ The job requires the expected ISO filename, size, and SHA-256 checksum before re
 
 The header provides **Authorize & Download**, **VCF Connections**, **Depot Files**, **Depot Management**, **Connection Logs**, and **Appliance Status**. During initial setup, **Prepare Depot** provides the guided steps for the Download Tool, authorization, Depot Accounts, HTTPS Certificate, and VCF Connections. After a saved endpoint becomes Connected, the setup workflow is hidden.
 
-**Depot Management** remains available before and after setup. Its three cards open Download Tool, Depot Accounts, and HTTPS Certificate. Use **Back to Depot Management** to return. Maintenance does not require disconnecting or deleting a working endpoint. After rotating depot credentials or renewing the certificate, review affected clients in **VCF Connections** and verify authenticated retrieval.
+**Depot Management** remains available before and after setup. Its four cards open Download Tool, Depot Accounts, HTTPS Certificate, and Software Depot Publishing. Use **Back to Depot Management** to return. Maintenance does not require disconnecting or deleting a working endpoint. After rotating depot credentials or renewing the certificate, review affected clients in **VCF Connections** and verify authenticated retrieval.
 
 **Depot Files** opens the **Depot File Management** page for browsing, uploading, and managing release files. **Appliance Status** reports health and effective settings. The administrator menu contains **Appliance management**, **Appliance updates**, and **Admin user management**; these pages leave the primary header links unhighlighted.
 ## Administration boundaries
@@ -307,6 +307,22 @@ Select **Start release download**.
 13. Validate expected metadata and at least one binary object.
 
 Do not retain tokens, vendor passwords, or activation credentials in screenshots, logs, or browser storage.
+
+## Publish verified content to VCF Operations
+
+**Why you may need this:** Content downloaded to the Offline Depot is not automatically visible in a separate VCF Operations Software Depot. This workflow publishes one exact BOM-mapped binary or OCI artifact bundle and verifies the destination inventory.
+
+1. Open **Depot Management > Software Depot Publishing**.
+2. Enter the Software Depot and VCF Operations FQDNs, authentication source, and VCF Operations username.
+3. Select **Discover certificates**. No endpoint credentials are sent during discovery.
+4. Independently compare both displayed SHA-256 fingerprints with the endpoint certificates, confirm trust, enter the password, and save the profile.
+5. Select the destination profile, exact four-part VCF release, binary or OCI artifact family, BOM component, and exact bundle ID.
+6. Select **Preview eligibility**. Continue only when the local catalog mapping, file size, and SHA-256 checks pass.
+7. Review the destination and exact bundle again, confirm the operation, and select **Publish verified bundle**.
+8. Monitor the durable job. The worker checks remote inventory before upload, performs the upload only when needed, and checks the same exact bundle afterward. OCI publication also requires a non-zero, complete remote OCI image count.
+9. If a job is interrupted or fails, correct the cause and select **Safe retry**. Retry reconciles remote inventory first and skips a duplicate upload when the bundle is already complete.
+
+Publishing is blocked while a VCF download or appliance update is active. A changed endpoint certificate blocks credential use until an administrator discovers and explicitly trusts the replacement certificate.
 
 ## Refresh and review offline content
 

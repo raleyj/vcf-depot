@@ -1,0 +1,53 @@
+{
+  "product": "VCF Offline Depot",
+  "version": "1.2.1",
+  "distributionBuild": "2026-11-09.2",
+  "status": "qualified for release",
+  "qualifiedUtc": "2026-11-12T19:24:18.983096+00:00",
+  "ova": {
+    "name": "VCF-Offline-Depot-1.2.1.ova",
+    "sha256": "986f3a4c7b1602d997d4b82cfd6f88b3476c44b08f89cacdfd1b37af6bb32fde",
+    "sizeBytes": 1334568960
+  },
+  "signedUpdate": {
+    "name": "offline-depot-update-1.2.1.tar.gz",
+    "sha256": "44aa864aaf0e6bcb30fb41e9059e17435327ae18dcb5d35c21d7483546b9f57a",
+    "sizeBytes": 568438
+  },
+  "hardware": {
+    "virtualHardware": "vmx-22",
+    "cpu": 4,
+    "memoryGiB": 8,
+    "disksGiB": [
+      32,
+      1024
+    ],
+    "network": "VMXNET3"
+  },
+  "validation": {
+    "nodeTests": "203 passed, 0 failed, 1 platform-specific skip",
+    "pythonFocusedTests": "14 passed",
+    "ovfToolVerifyOnly": "passed",
+    "freshExactOvaDeployment": "passed",
+    "freshFirstBoot": "passed",
+    "freshRebootPersistence": "passed",
+    "httpsLogin": "passed",
+    "runtimeHashes": "351 verified before and after reboot",
+    "dataDisk": "1 TiB initialized and mounted as ext4",
+    "publishingCleanState": "passed",
+    "certificateDiscovery": "passed without credentials",
+    "signedUpdateOnLiveAppliance": "healthy",
+    "actualArtifactUpload": "3.94 GiB NSX_ALB bundle transferred successfully",
+    "remoteReconciliation": "exact OVA-only bundle verified complete and duplicate transfer skipped"
+  },
+  "publishingSafeguards": {
+    "credentialStorage": "encrypted",
+    "certificatePinning": true,
+    "credentialsSentDuringDiscovery": false,
+    "exactBomAndCatalogMapping": true,
+    "recursiveSizeAndSha256Verification": true,
+    "restrictedWorkingDirectoryPreparation": true,
+    "remoteInventoryReconciliation": true
+  },
+  "scope": "The final OVA was freshly deployed and reboot-tested. The live appliance received the signed corrective build while preserving its configuration and depot content. No bulk publishing job was started."
+}
